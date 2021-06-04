@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="de/l3s/db/|newMI/FlowerPower.java|newMI/Test2.java|test/FlowerCreatorFramework.java|test/FlowerTableCreator.java|test/FlowerThread.java|test/LemmatizeFramework.java|test/MegaFlowerCreatorThreaded.java|test/PrintFlower.java|test/PrintNewFlower.java|test/StemmerFramework.java|test/StudyFlowerCreator.java|test/LemmatizeDBTable.java|test/FlowerCreator.java|de/l3s/source/DBDataRow.java|analyze/MIselection2.java|analyze/WordTopicScoreTriple.java|analyze/JaccardClusterScores.java|de/l3s/lemma/lemma.java|de/l3s/topicmodelling/MalletTopicModelling.java|de/l3s/topics/tools/SplitTextInCategories.java|de/l3s/util/|test/|analyze/MItest.java|de/l3s/topicmodelling/ScoreTopic.java|de/l3s/algorithm/mutualinformation/FlowerPower.java|de/l3s/algorithm/mutualinformation/Test2.java|de/l3s/flower/gui/GrowableShape.java|de/l3s/flower/gui/FlowerPanel.java|de/l3s/flower/gui/FlowerFrame.java|de/l3s/flower/gui/FlowerComputationPanel.java|de/l3s/flower/gui/CompositeStroke.java|de/l3s/flower/gui/CenterPolygon.java|de/l3s/algorithm/mutualinformation/MI3.java|de/l3s/algorithm/mutualinformation/MICategoryCal2.java|de/l3s/algorithm/mutualinformation/MICategoryCalNew.java|de/l3s/aglorithm/diversity/TrackDJReadable.java|stars4all/tweets/" kind="src" output="target/classes" path="src/main/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
