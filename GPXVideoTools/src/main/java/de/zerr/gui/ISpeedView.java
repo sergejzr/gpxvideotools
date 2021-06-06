@@ -1,5 +1,7 @@
 package de.zerr.gui;
 
+import java.time.ZonedDateTime;
+
 /*
  * @(#) ISpeedView.java
  *
@@ -36,5 +38,5 @@ public interface ISpeedView extends INavigatorView
 	 * @param date the instant as a <code>Date</code> object. 
 	 * @param speed the according speed.
 	 */
-	public void setSpeed (Date date, double speed);
+	public void setSpeed (ZonedDateTime date, double speed);
 }
