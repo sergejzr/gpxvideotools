@@ -37,7 +37,7 @@ public class GPXIterator {
 	
 	public GPXIterator(String GPXFlename, double framerate, ZonedDateTime starttime) throws Exception {
 
-		GPXRouteBuilder rbuilder = new GPXRouteBuilder(GPXFlename);
+		GPXRouteBuilderX rbuilder = new GPXRouteBuilderX(GPXFlename);
 		
 		//mytrack=rbuilder.prepare()
 		mytrack = rbuilder.getEnhanced(0, 0, GPXTargetValue.SPEED);
@@ -80,7 +80,7 @@ public class GPXIterator {
 		
 		for(WayPoint cp:mytrack) {
 			double speed_mps = cp.getSpeed().get().doubleValue();
-			System.out.println(cp.getTime().get()+" "+  speed_mps+" "+GPXRouteBuilder.kmph(speed_mps));
+			System.out.println(cp.getTime().get()+" "+  speed_mps+" "+GPXRouteBuilderX.kmph(speed_mps));
 			//System.out.println(cp.getTime().get()+ " speed:"+ (cp.getSpeed().get().doubleValue()));
 		//System.out.println(cp.getTime().get()+ " speed:"+ GPXRouteBuilder.kmph(cp.getSpeed().get().doubleValue()));
 		}
@@ -126,6 +126,7 @@ public class GPXIterator {
 					elevationfunc = GPXInterpolator.interpolate(mytrack, GPXTargetValue.ELEVATION);
 				}
 				pointbuilder.ele(elevationfunc.value(curx));
+				
 				break;
 			}
 			}

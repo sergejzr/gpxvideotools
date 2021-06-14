@@ -25,18 +25,15 @@ import java.time.ZonedDateTime;
 
 import java.util.Date;
 
+import de.zerr.ContinuousRoute;
+
 /**
  * This interface provides functionality necessary to update a speed view.
  * 
  * @author Clemens Krainer
  */
-public interface ISpeedView extends INavigatorView
-{
-	/**
-	 * Communicate the current speed to the view.
-	 *  
-	 * @param date the instant as a <code>Date</code> object. 
-	 * @param speed the according speed.
-	 */
-	public void setSpeed (ZonedDateTime date, double speed);
+public interface ICockpit {
+	public void setRoute(ContinuousRoute route, ZonedDateTime starttime, ZonedDateTime endtime);
+
+	public void at(ZonedDateTime time);
 }

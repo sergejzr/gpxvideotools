@@ -14,11 +14,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.bytedeco.javacv.FFmpegFrameGrabber.Exception;
+
+import de.zerr.ContinuousRoute;
 
 public class SpeedometerView extends JFrame{
 	
@@ -26,13 +29,13 @@ public class SpeedometerView extends JFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = -2223627618972535213L;
-	private SpeedometerPanel speedometer;
+	private JFreeChartCockpit speedometer;
 JLabel video=new JLabel("video");
 JButton seek=new JButton("Seek");
-private AnimateController animateController;
+private IAnimateController animateController;
 private JSlider slider;
-	public SpeedometerView() {
-		this.setBounds(100, 100, 1500, 1500);
+	public SpeedometerView(ContinuousRoute route) {
+		this.setBounds(100, 100, 700, 700);
 		/*
 		SpeedometerImage si=new SpeedometerImage();
 		si.setAttitude(253);
@@ -40,11 +43,12 @@ private JSlider slider;
 		si.setSpeed(32.6);
 		this.getContentPane().add(new JLabel(new ImageIcon(si.getSpeedometerImage())));
 		*/
-		 speedometer=new SpeedometerPanel(100,50);
-		speedometer.setSpeed(ZonedDateTime.now(), 4);
+		//speedometer=new ElemeterPanel(100,50);
+		speedometer=new JFreeChartCockpit(route);
+		speedometer.setSpeed(0);
 		seek.setBounds(100, 100, 100, 100);
 		speedometer.setMinimumSize(new Dimension(300,300));
-		speedometer.setPreferredSize(new Dimension(300,300));
+		speedometer.setPreferredSize(new Dimension(300,500));
 	this.setLayout(new BorderLayout());
 	
 		 slider=new JSlider();
@@ -61,8 +65,8 @@ private JSlider slider;
 				}
 			}
 		});
-	this.add(slider, BorderLayout.SOUTH);
-	this.add(speedometer, BorderLayout.WEST);
+	this.add(slider, BorderLayout.NORTH);
+	this.add(speedometer, BorderLayout.SOUTH);
 	this.add(video, BorderLayout.CENTER);
 	
 		seek.addActionListener(new ActionListener() {
@@ -84,7 +88,7 @@ private JSlider slider;
 		});
 	}
 
-	public SpeedometerPanel getSpeedometer() {
+	public ICockpit getSpeedometer() {
 		return speedometer;
 	}
 
@@ -93,7 +97,7 @@ private JSlider slider;
 		
 	}
 
-	public void setController(AnimateController animateController) {
+	public void setController(IAnimateController animateController) {
 		this.animateController=animateController;
 		
 	}

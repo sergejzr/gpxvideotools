@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import de.zerr.gui.SpeedometerPanel;
+import de.zerr.gui.ElemeterPanelOld;
 import io.jenetics.jpx.WayPoint;
 
 public class Animator {
@@ -14,12 +14,12 @@ public class Animator {
 		 it = new GPXIterator(gpxfile,25);
 	}
 	
-	public void animate(SpeedometerPanel speedometer)
+	public void animate(ElemeterPanelOld speedometer)
 	{
 		WayPoint wp=null;
 		while((wp=it.next())!=null)
 		{
-			speedometer.setSpeed(ZonedDateTime.now(), GPXRouteBuilder.kmph(wp.getSpeed().get().doubleValue()));
+			speedometer.setSpeed(ZonedDateTime.now(), GPXRouteBuilderX.kmph(wp.getSpeed().get().doubleValue()));
 			speedometer.repaint();
 		}
 	}

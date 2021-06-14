@@ -12,10 +12,11 @@ import org.bytedeco.javacv.Java2DFrameConverter;
 import com.coremedia.iso.IsoFile;
 
 import de.zerr.core.animator.GPXIterator;
-import de.zerr.core.animator.GPXRouteBuilder;
+import de.zerr.core.animator.GPXIteratorA;
+import de.zerr.core.animator.GPXRouteBuilderX;
 import io.jenetics.jpx.WayPoint;
 
-public class AnimateController {
+public class AnimateController implements IAnimateController{
 	
 	private GPXIterator it;
 	private FFmpegFrameGrabber frameGrabber;
@@ -25,7 +26,7 @@ public class AnimateController {
 
 	public AnimateController(String videoname, ZonedDateTime videoStartTime, String gpxfile) {
 
-		sv = new SpeedometerView();
+		sv = new SpeedometerView(null);
 		sv.setVisible(true);
 		sv.setController(this);
 
@@ -79,7 +80,7 @@ public class AnimateController {
 	
 		 ZonedDateTime newStartTime = videoStartTime.plusSeconds(startseconds);
 		
-		SpeedometerPanel speedometer = sv.getSpeedometer();
+		ICockpit speedometer = sv.getSpeedometer();
 		WayPoint wp = null;
 		 
 	       
@@ -96,7 +97,7 @@ public class AnimateController {
 	        it.seek(newStartTime);
 		while ((wp = it.next()) != null) {
 			Date d=new Date();
-			speedometer.setSpeed(wp.getTime().get(), GPXRouteBuilder.kmph(wp.getSpeed().get().doubleValue()));
+			speedometer.setSpeed( GPXRouteBuilderX.kmph(wp.getSpeed().get().doubleValue()));
 			  try {
 		            f = frameGrabber.grabImage();
 		              bi = c.convert(f);

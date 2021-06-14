@@ -2,7 +2,10 @@ package de.zerr.core.animator;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -11,18 +14,20 @@ import io.jenetics.jpx.GPX;
 import io.jenetics.jpx.GPX.Reader.Mode;
 import io.jenetics.jpx.WayPoint;
 
-public class GPXRouteBuilder {
+public class GPXRouteBuilderX {
 
 	private GPX gpx;
+	//Hashtable<ZonedDateTime, RoutePoint> additionalInformation=new Hashtable<ZonedDateTime, WayPointInfo>();
+	//Hashtable<String, Hashtable<String, WayPoint>> waypointidx=new Hashtable<String, Hashtable<String,WayPoint>>();
+	
 
-	public GPXRouteBuilder(String GPXFlename) throws IOException {
+	public GPXRouteBuilderX(String GPXFlename) throws IOException {
 		gpx = GPX.reader(Mode.LENIENT).read(GPXFlename);
 	}
 
 	public static ArrayList<WayPoint> smooth(List<WayPoint> in, int windows, GPXTargetValue... enhancements) {
 		ArrayList<WayPoint> out = new ArrayList<WayPoint>();
-		//DescriptiveStatistics stats = new DescriptiveStatistics();
-		
+		// DescriptiveStatistics stats = new DescriptiveStatistics();
 
 		// Read data from an input stream,
 		// displaying the mean of the most recent 100 observations
@@ -35,8 +40,8 @@ public class GPXRouteBuilder {
 		DescriptiveStatistics stats = new DescriptiveStatistics();
 		stats.setWindowSize(windows);
 		for (int i = head; i < in.size(); i++) {
-			
-			for (int y = i-head; y < i+windows && y< in.size(); y++) {
+
+			for (int y = i - head; y < i + windows && y < in.size(); y++) {
 				WayPoint wp = in.get(y);
 				stats.addValue(wp.getSpeed().get().doubleValue());
 			}
@@ -52,7 +57,21 @@ public class GPXRouteBuilder {
 
 		WayPoint prev = null;
 
-		for (WayPoint wp : gpx.getTracks().get(track).getSegments().get(segment).getPoints()) {
+		List<WayPoint> tracksegment =  gpx.getTracks().get(track).getSegments().get(segment).getPoints();
+		
+		//ptintsegment("original",tracksegment);
+		//tracksegment=refine(tracksegment);
+		//ptintsegment("refined",tracksegment);
+		
+		prev = null;
+		int cnt=0;
+		double km=0;
+		
+		ZonedDateTime referencetime=tracksegment.get(0).getTime().get();
+		
+		for (WayPoint wp : tracksegment) {
+			
+			
 			if (prev == null) {
 				prev = wp;
 				theroute.add(wp.toBuilder().speed(0).build());
@@ -64,17 +83,20 @@ public class GPXRouteBuilder {
 			for (GPXTargetValue en : enhancements) {
 				switch (en) {
 				case SPEED: {
+					/*
 					double dist = distance_on_geoid(prev.getLatitude().doubleValue(), prev.getLongitude().doubleValue(),
 							wp.getLatitude().doubleValue(), wp.getLongitude().doubleValue());
+						*/
+					double dist =prev.distance(wp).doubleValue();
 					Duration d = Duration.between(prev.getTime().get(), wp.getTime().get());
 					double speed_mps = dist / d.getSeconds();
 
-					double speedlmph = GPXRouteBuilder.kmph(speed_mps);
-					
-					if (false&&speedlmph < 1) {
+					double speedlmph = GPXRouteBuilderX.kmph(speed_mps);
+
+					if (speedlmph < 1) {
 						speed_mps = 0;
 					}
-
+					
 					wpbuider.speed(speed_mps);
 
 					// System.out.println(wp.getTime().get()+" "+ speed_mps+"
@@ -90,8 +112,21 @@ public class GPXRouteBuilder {
 			prev = wp;
 		}
 
+		//ptintsegment("withspeed",theroute);
 		return theroute;
 	}
+
+	public static void ptintsegment(String title, List<WayPoint> tracksegment) {
+		int  cnt=0;
+		for(WayPoint wp:tracksegment) 
+		{
+			
+			System.out.println(title+" ("+(cnt++)+") "+wp+", "+(wp.getSpeed().isPresent()?wp.getSpeed().get()+", ":"")+wp.getTime().get());
+		}
+		
+	}
+
+
 
 	public static double kmph(double speed_mps) {
 		double speed_kph = (speed_mps * 3600.0) / 1000.0;
@@ -126,10 +161,18 @@ public class GPXRouteBuilder {
 		double dot = (x1 * x2 + y1 * y2 + z1 * z2);
 		double cos_theta = dot / (r * r);
 
+		if(cos_theta>1) cos_theta=1;
 		double theta = Math.acos(cos_theta);
 
 		// Distance in Metres
-		return r * theta;
+		double dist = r * theta;
+		
+		if(Double.isNaN(dist)) 
+		{
+			int z=0;
+			z++;
+		}
+		 return dist;
 	}
 
 }

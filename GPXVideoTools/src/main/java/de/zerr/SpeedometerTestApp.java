@@ -13,9 +13,11 @@ import org.bytedeco.javacv.Java2DFrameConverter;
 import org.bytedeco.opencv.opencv_core.IplImage;
 
 import de.zerr.core.animator.GPXIterator;
-import de.zerr.core.animator.GPXRouteBuilder;
-import de.zerr.gui.AnimateController;
-import de.zerr.gui.SpeedometerPanel;
+import de.zerr.core.animator.GPXIteratorA;
+import de.zerr.core.animator.GPXRouteBuilderX;
+import de.zerr.gui.AnimateControllerA;
+import de.zerr.gui.ElemeterPanelOld;
+import de.zerr.gui.ICockpit;
 import de.zerr.gui.SpeedometerView;
 import io.jenetics.jpx.WayPoint;
 
@@ -23,9 +25,10 @@ public class SpeedometerTestApp {
 
 	public static void main(String[] args) {
 		ZonedDateTime videoStartTime = (ZonedDateTime.parse("2021-05-30T08:49:50Z"));
-		AnimateController ac=new AnimateController("/home/szerr/Videos/bikeSCHNEKLK.mp4", videoStartTime, "/home/szerr/Downloads/RK_gpx _2021-05-30_1045.gpx");
+		ZonedDateTime videoEndTime = videoStartTime.plusMinutes(50).plusSeconds(29);
+		AnimateControllerA ac=new AnimateControllerA("/home/szerr/Videos/bikeSCHNEKLK.mp4", videoStartTime, videoEndTime,"/home/szerr/Downloads/RK_gpx _2021-05-30_1045.gpx");
 	try {
-		ac.run(1000);
+		ac.run();
 	} catch (org.bytedeco.javacv.FrameGrabber.Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -35,7 +38,7 @@ public class SpeedometerTestApp {
 
 	private static void test1() {
 
-		SpeedometerView sv = new SpeedometerView();
+		SpeedometerView sv = new SpeedometerView(null);
 		sv.setVisible(true);
 
 		try {
@@ -58,7 +61,7 @@ public class SpeedometerTestApp {
 			System.out.println("Framerate: "+frameGrabber.getFrameRate());
 			
 			
-			SpeedometerPanel speedometer = sv.getSpeedometer();
+			 ICockpit speedometer = sv.getSpeedometer();
 			WayPoint wp = null;
 			 
 		       
@@ -74,7 +77,8 @@ public class SpeedometerTestApp {
 		        frameGrabber.setFrameNumber((int)(framerate*startseconds));
 			while ((wp = it.next()) != null) {
 				Date d=new Date();
-				speedometer.setSpeed(wp.getTime().get(), GPXRouteBuilder.kmph(wp.getSpeed().get().doubleValue()));
+				speedometer.setSpeed(GPXRouteBuilderX.kmph(wp.getSpeed().get().doubleValue()));
+				speedometer.setTime(wp.getTime().get());
 				  try {
 			            f = frameGrabber.grabImage();
 			              bi = c.convert(f);

@@ -23,6 +23,7 @@ package de.zerr.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -30,6 +31,7 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.text.NumberFormat;
 import java.time.ZonedDateTime;
@@ -44,7 +46,7 @@ import javax.swing.JPanel;
  * 
  * @author Clemens Krainer
  */
-public class SpeedometerPanel extends JPanel implements ISpeedView
+public class SpeedometerJFreechart extends JPanel implements ICockpit
 {
 	private static final long serialVersionUID = -4076648741571762140L;
 
@@ -69,8 +71,13 @@ public class SpeedometerPanel extends JPanel implements ISpeedView
 	double sub_interval = (startAngle-endAngle) / 25;
 	int needleDiameter = (int)(size * 0.1);
 	int needleLength = r1 + l3;
-	
-	
+	double km=0;
+	public double getKm() {
+		return km;
+	}
+	public void setKm(double km) {
+		this.km = km;
+	}
 	/**
 	 * This <code>Ellipse2D</code> represents the center of the speedometer needle.
 	 */
@@ -86,7 +93,7 @@ public class SpeedometerPanel extends JPanel implements ISpeedView
 			5);
 	
  
-	public SpeedometerPanel(int size,
+	public SpeedometerJFreechart(int size,
 			double max_speed)
 	{
 		this(size,225,-45,max_speed);
@@ -112,7 +119,7 @@ public class SpeedometerPanel extends JPanel implements ISpeedView
 		locale = new Locale ("de","AT");
 		
 	}
-	public SpeedometerPanel(int size,  double startAngle, double endAngle,
+	public SpeedometerJFreechart(int size,  double startAngle, double endAngle,
 			double max_speed) {
 		
 		this(size, 
@@ -125,7 +132,7 @@ public class SpeedometerPanel extends JPanel implements ISpeedView
 		
 	}
 	
-	public SpeedometerPanel(int size, double f1, double f2, double f3, double f4, double startAngle, double endAngle,
+	public SpeedometerJFreechart(int size, double f1, double f2, double f3, double f4, double startAngle, double endAngle,
 			double max_speed) {
 		super();
 		this.size = size;
@@ -194,6 +201,8 @@ public class SpeedometerPanel extends JPanel implements ISpeedView
      */
     private Locale locale;
 
+	private ZonedDateTime curTime;
+
 	/**
 	 * Construct a <code>Speedometer</code>.
 	 */
@@ -241,7 +250,7 @@ public void setup() {
 	/* (non-Javadoc)
 	 * @see at.uni_salzburg.cs.ckgroup.ui.ISpeedView#setSpeed(java.util.Date, double)
 	 */
-	public void setSpeed (ZonedDateTime zonedDateTime, double currentSpeed)
+	public void setSpeed (double currentSpeed)
 	{
 		this.speed = currentSpeed/3.6;
 		
@@ -252,7 +261,7 @@ public void setup() {
         String h1 = this.speed < 10 ? " " : "";
         String h2 = currentSpeed < 10 ? " " : "";
        // this.speedString = h1 + nf.format(this.speed) + "m/s = "+ h2 + nf.format(currentSpeed) +"km/h";
-        this.speedString = h2 + nf.format(currentSpeed) +"km/h \t\t"+zonedDateTime;
+        this.speedString = h2 + nf.format(currentSpeed) +"km/h \t\t";
 //		this.speedString = String.format ("%5.2fm/s = %5.2fkm/h", new Object[] {new Double (speed),new Double (currentSpeed)});
 		repaint ();
 	}
@@ -262,6 +271,10 @@ public void setup() {
 	 */
 	public void paintComponent (Graphics g)
 	{
+		int center=size/2;
+		FontMetrics fm = g.getFontMetrics();
+		
+		
 		super.paintComponent (g);
 		Graphics2D ga = (Graphics2D)g;
 
@@ -272,7 +285,14 @@ public void setup() {
 		ga.drawString ("Speed", 5, 15);
 		
 		if (speedString != null)
-			ga.drawString (speedString, 5, size-5);
+			ga.drawString(speedString, 5, size-5);
+		
+		String kmstring=""+String.format("%.2f", Math.round(km*100)/100.);
+		Rectangle2D kmstringbounds = fm.getStringBounds(kmstring, ga);
+		
+		int kmstringx=(int)(center-kmstringbounds.getWidth()/2.);
+		int kmstringy=(int)(center-kmstringbounds.getHeight());
+		ga.drawString (kmstring,kmstringx, kmstringy);
 		
 		for (int k=0; k < shapes.length; k++)
 			ga.draw (shapes[k]);
@@ -316,4 +336,30 @@ public void setup() {
 	        paint(bi.getGraphics());
 	        return bi;
 	    }
+	@Override
+	public void setElevation(double d) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void setAcceleration(double d) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTime(ZonedDateTime curTime) {
+		this.curTime=curTime;
+		
+	}
+	@Override
+	public void setBearing(double heading) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void setSlope(double slope) {
+		// TODO Auto-generated method stub
+		
+	}
 }
